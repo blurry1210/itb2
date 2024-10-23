@@ -161,11 +161,11 @@ MerkleProof *generate_proof(MerkleTree *tree, const char *data) {
         return NULL;
     }
 
-    // Calculează hash-ul pentru datele introduse
+    // calc hash
     unsigned char hash[HASH_SIZE];
     sha256_hash(data, strlen(data), hash);
 
-    // Găsește frunza care corespunde hash-ului
+    // gasire frunza
     Node *leaf_node = NULL;
     for (int i = 0; i < tree->leaf_count; i++) {
         if (memcmp(tree->leaves[i]->hash, hash, HASH_SIZE) == 0) {
@@ -179,7 +179,7 @@ MerkleProof *generate_proof(MerkleTree *tree, const char *data) {
         return NULL; // Elementul nu a fost găsit
     }
 
-    // Construiește structura MerkleProof
+    // construire structura 
     MerkleProof *proof = malloc(sizeof(MerkleProof));
     proof->count = 0;
     proof->siblings = malloc(tree->leaf_count * sizeof(unsigned char*));
@@ -189,30 +189,30 @@ MerkleProof *generate_proof(MerkleTree *tree, const char *data) {
     printf("Merkle Proof pentru '%s':\n", data);
     printf("Hash-ul frunzei: %s\n", hash_to_string(hash));
 
-    // Urmărim fratele pentru fiecare nivel până la rădăcină
+        // urmarirea fratilor
     while (current->parent != NULL) {
         Node *parent = current->parent;
 
         // Verificăm dacă nodul curent este în stânga sau dreapta
         if (parent->left == current) {
-            // Fratele este în dreapta
-            proof->siblings[proof->count] = parent->right->hash;  // Folosim hash-ul deja calculat
-            proof->directions[proof->count] = 1;  // 1 înseamnă că fratele este în dreapta
+            // frate dr
+            proof->siblings[proof->count] = parent->right->hash;  
+            proof->directions[proof->count] = 1;  
             printf("Pasul %d: Hash-ul fratelui dreapta: %s\n", proof->count + 1, hash_to_string(parent->right->hash));
         } else {
-            // Fratele este în stânga
-            proof->siblings[proof->count] = parent->left->hash;  // Folosim hash-ul deja calculat
-            proof->directions[proof->count] = 0;  // 0 înseamnă că fratele este în stânga
+            // frate st
+            proof->siblings[proof->count] = parent->left->hash;  
+            proof->directions[proof->count] = 0; 
             printf("Pasul %d: Hash-ul fratelui stânga: %s\n", proof->count + 1, hash_to_string(parent->left->hash));
         }
 
         proof->count++;
-        current = parent;  // Urcăm la nivelul următor
+        current = parent;  // trecem la urm nivel
     }
 
     printf("Hash-ul rădăcinii arborelui Merkle: %s\n\n", hash_to_string(tree->root->hash));
 
-    // Returnează structura de probă
+    // ret structura proba
     return proof;
 }
 

@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+// functia pentru a elimina caracterele nedorite de pe fiecare linie din fisier
+
 void linie(char *str) {
     char *write = str, *read = str;
     while (*read) {
@@ -27,7 +29,7 @@ int main() {
     }
 
     fclose(file);
-   // print_tree(tree);
+   // printarea tree-ului
 
     const char *student_name = "Alex Borza";
     MerkleProof *proof = generate_proof(tree, student_name);
@@ -36,9 +38,9 @@ int main() {
     bool valid = verify_proof(root_hash, student_name, proof);
 
             if (valid) {
-                printf("proof valid.\n");
+                printf("proof valid pentru Alex Borza.\n");
             } else {
-                printf("proof invalid.\n");
+                printf("proof invalid pentru Alex Borza.\n");
             }
     free_merkle_tree(tree);
     
